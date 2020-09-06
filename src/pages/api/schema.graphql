@@ -2,16 +2,22 @@
 ### Do not make changes to this file directly
 
 
+type AuthPayload {
+  accessToken: String!
+  user: User!
+}
+
 """
 A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
 scalar Date
 
 type Mutation {
-  createDraft(authorEmail: String, content: String!, title: String!): Post!
-  deletePost(postId: String): Post
+  createDraft(content: String!, title: String!): Post!
+  deletePost(postId: Int): Post
+  login(email: String!, password: String!): AuthPayload!
   publish(postId: Int): Post
-  signupUser(email: String!, name: String!): User!
+  signup(email: String!, name: String, password: String!): AuthPayload!
 }
 
 type Post {
@@ -22,17 +28,24 @@ type Post {
   title: String!
 }
 
+input PostWhereUniqueInput {
+  id: Int
+}
+
 type Query {
-  drafts: [Post!]!
   feed: [Post!]!
-  filteredPosts(searchString: String): [Post!]!
-  post(postId: String!): Post
-  users: [User!]!
+  filterPosts(searchString: String): [Post!]!
+  me: User!
+  post(postId: Int): Post
+}
+
+type Subscription {
+  latestPost: Post!
 }
 
 type User {
   email: String!
   id: Int!
   name: String!
-  posts: [Post!]!
+  posts(cursor: PostWhereUniqueInput, skip: Int, take: Int): [Post!]!
 }

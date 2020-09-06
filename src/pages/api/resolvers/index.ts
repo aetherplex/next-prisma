@@ -3,8 +3,6 @@ import { Mutation } from './Mutations';
 import { Subscription } from './Subscriptions';
 import { Query } from './Queries';
 
-export const GQLDate = asNexusMethod(GraphQLDate, 'date');
-
 export const resolvers = {
 	...Models,
 	Query,

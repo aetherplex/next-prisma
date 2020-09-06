@@ -1,8 +1,39 @@
-import server from './server';
+import { ApolloServer } from 'apollo-server-micro';
+// import { applyMiddleware } from 'graphql-middleware';
+import { schema } from './schema';
+import { isDev } from './utils/constants';
+import { createContext } from './utils/helpers';
+// import { permissions } from './utils/rules';
+// import cors from 'micro-cors';
+// import { NextApiRequest, NextApiResponse } from 'next';
 
-const PORT = process.env.PORT || 4002;
+export const config = {
+	api: {
+		bodyParser: false,
+	},
+};
 
-server.listen({ port: PORT }).then(({ url, subscriptionsUrl }) => {
-	console.log(`🚀 Server ready at ${url}`);
-	console.log(`🚀 Subscriptions ready at ${subscriptionsUrl}`);
+export default new ApolloServer({
+	schema,
+	context: createContext,
+	playground: true,
+	tracing: isDev(),
+	introspection: true,
+	debug: isDev(),
+}).createHandler({
+	path: '/api',
 });
+
+// export default async function(req: NextApiRequest, res: NextApiResponse) {
+// 	cors((req, res) => {
+// 		return new Promise((resolve, _reject) => {
+// 			if (req.method === 'OPTIONS') {
+// 				res.end();
+// 				return resolve();
+// 			} else {
+// 				handler(req, res);
+// 				return resolve();
+// 			}
+// 		});
+// 	});
+// }

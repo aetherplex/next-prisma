@@ -14,8 +14,8 @@ export const schema = makeSchema({
 	types: [allTypes],
 	plugins: [nexusPrisma],
 	outputs: {
-		typegen: join(__dirname, 'pages', 'api', 'nexus-typegen.ts'),
-		schema: join(__dirname, 'pages', 'api', 'schema.graphql'),
+		typegen: join(process.cwd(), 'src', 'pages', 'api', 'nexus-typegen.ts'),
+		schema: join(process.cwd(), 'src', 'pages', 'api', 'schema.graphql'),
 	},
 	typegenAutoConfig: {
 		sources: [
@@ -24,7 +24,7 @@ export const schema = makeSchema({
 				alias: 'prisma',
 			},
 			{
-				source: join(__dirname, 'types.ts'),
+				source: join(process.cwd(), 'src', 'pages', 'api', 'types.ts'),
 				alias: 'ctx',
 			},
 		],

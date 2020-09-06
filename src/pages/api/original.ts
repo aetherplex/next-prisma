@@ -10,8 +10,6 @@ import { PrismaClient } from '@prisma/client';
 import { ApolloServer } from 'apollo-server-micro';
 import path from 'path';
 
-export const GQLDate = asNexusMethod(GraphQLDate, 'date');
-
 const prisma = new PrismaClient();
 
 const User = objectType({
@@ -90,75 +88,6 @@ const Query = objectType({
 							{ content: { contains: searchString as string } },
 						],
 					},
-				});
-			},
-		});
-	},
-});
-
-const Mutation = objectType({
-	name: 'Mutation',
-	definition(t) {
-		t.field('signupUser', {
-			type: 'User',
-			args: {
-				name: stringArg({ nullable: false }),
-				email: stringArg({ nullable: false }),
-			},
-			resolve: (_, { name, email }, ctx) => {
-				return prisma.user.create({
-					data: {
-						name,
-						email,
-					},
-				});
-			},
-		});
-
-		t.field('deletePost', {
-			type: 'Post',
-			nullable: true,
-			args: {
-				postId: stringArg(),
-			},
-			resolve: (_, { postId }, ctx) => {
-				return prisma.post.delete({
-					where: { id: Number(postId) },
-				});
-			},
-		});
-
-		t.field('createDraft', {
-			type: 'Post',
-			args: {
-				title: stringArg({ nullable: false }),
-				content: stringArg({ nullable: false }),
-				authorEmail: stringArg(),
-			},
-			resolve: (_, { title, content, authorEmail }, ctx) => {
-				return prisma.post.create({
-					data: {
-						title,
-						content,
-						published: false,
-						author: {
-							connect: { email: authorEmail as string },
-						},
-					},
-				});
-			},
-		});
-
-		t.field('publish', {
-			type: 'Post',
-			nullable: true,
-			args: {
-				postId: intArg(),
-			},
-			resolve: (_, { postId }) => {
-				return prisma.post.update({
-					where: { id: Number(postId) },
-					data: { published: true },
 				});
 			},
 		});
